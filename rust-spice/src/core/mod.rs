@@ -166,9 +166,10 @@ pub mod raw;
 
 pub use self::neat::{bodc2n, dskp02, dskv02, kdata, timout};
 pub use self::raw::{
-    bodfnd, bodn2c, dascls, dasopr, dlabfs, dskgd, dskn02, dskobj, dskx02, dskz02, furnsh, georec,
-    illumf, kclear, ktotal, latrec, mxv, pxform, pxfrm2, radrec, recrad, spkcls, spkezr, spkopn,
-    spkpos, spkw09, str2et, unload, vcrss, vdot, vsep, xpose, DLADSC, DSKDSC,
+    bltfrm, bodfnd, bodn2c, bodvcd, dascls, dasopr, dlabfs, dskgd, dskn02, dskobj, dskx02, dskz02,
+    frmnam, furnsh, georec, illumf, kclear, ktotal, latrec, mxv, pxform, pxfrm2, radrec, recrad,
+    spkcls, spkezr, spkopn, spkpos, spkw09, str2et, unload, vcrss, vdot, vsep, xpose, DLADSC,
+    DSKDSC,
 };
 
 /**

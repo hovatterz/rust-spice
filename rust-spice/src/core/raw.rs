@@ -113,6 +113,23 @@ cspice_proc! {
     pub fn bodn2c(name: &str) -> (i32, bool) {}
 }
 
+/**
+ Fetch from the kernel pool the double precision values of an item
+ associated with a body, where the body is specified by an integer ID
+ code.
+*/
+pub fn bodvcd(body_id: i32, item: &str, room: i32) -> (i32, Vec<f64>) {
+    let mut varout_0 = init_scalar!();
+    let varout_1 = malloc!(f64, room);
+    unsafe {
+        crate::c::bodvcd_c(body_id, cstr!(item), room, mptr!(varout_0), varout_1);
+        (
+            get_scalar!(varout_0),
+            get_varr!(varout_1, get_scalar!(varout_0)),
+        )
+    }
+}
+
 cspice_proc! {
     /**
     close a das file.
@@ -250,6 +267,14 @@ cspice_proc! {
         obsrvr: &str,
         spoint: [f64; 3]
     ) -> (f64, [f64; 3], f64, f64, f64, bool, bool) {}
+}
+
+cspice_proc! {
+    /**
+    Retrieve the name of a reference frame associated with a SPICE ID code.
+    */
+    #[cfg_attr(any(feature = "lock", doc), impl_for(SpiceLock))]
+    pub fn frmnam(frame_code: i32, lenout: i32) -> String {}
 }
 
 cspice_proc! {
