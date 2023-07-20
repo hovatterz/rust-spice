@@ -68,6 +68,14 @@ impl DerefMut for Cell {
 
 cspice_proc! {
     /**
+    Return a SPICE set containing the frame IDs of all built-in frames of a specified class.
+    */
+    #[cfg_attr(any(feature = "lock", doc), impl_for(SpiceLock))]
+    pub fn bltfrm(frame_type: i32) -> Cell {}
+}
+
+cspice_proc! {
+    /**
     Translate the SPICE integer code of a body into a common name for that body.
 
     This function has a [neat version][crate::neat::bodc2n].
