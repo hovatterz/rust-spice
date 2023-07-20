@@ -1,5 +1,7 @@
 # rust-spice
 
+**This is a fork of the [original repository](https://github.com/GregoireHENRY/rust-spice) with a few more functions implemented. I will try to contribute back when time permits**
+
 [![logo image]][repository link]
 
 [![crate badge]][crate link]
@@ -27,16 +29,16 @@
 
 ## Intro
 
-**SPICE** is *An Observation Geometry System for Space Science Missions*. Visit
+**SPICE** is _An Observation Geometry System for Space Science Missions_. Visit
 their [website][naif link].
 
 ## Requirements
 
-1) Install [CSPICE library][cspice install link] for your platform.
-2) Set the environment variable `CSPICE_DIR` to your CSPICE installation folder
+1. Install [CSPICE library][cspice install link] for your platform.
+2. Set the environment variable `CSPICE_DIR` to your CSPICE installation folder
    (where CSPICE subfolders `include` and `lib` are located. You can do that in the
    [Cargo configuration][config doc]).
-3) In the `cspice/lib` folder you might need for Unix systems to rename the
+3. In the `cspice/lib` folder you might need for Unix systems to rename the
    static library to match standards: `cspice.a` -> `libcspice.a`
 
 See other requirements at [`cspice-sys`][cspice-sys link] library which provides
@@ -167,18 +169,18 @@ sl.kclear();
 
 ## Roadmap
 
-+ provide a packaging of the test assets
-+ complete most-used API
-+ complete whole API
-+ refactoring of the procedural macros
-+ refactoring of Cell
+- provide a packaging of the test assets
+- complete most-used API
+- complete whole API
+- refactoring of the procedural macros
+- refactoring of Cell
 
 ## Contributors
 
 Hall of fame:
 
-+ [@s-rah][s-rah url]: [#2][PR 2]
-+ [@pixldemon][pixldemon url]: [#6][PR 6] [#10][PR 10]
+- [@s-rah][s-rah url]: [#2][PR 2]
+- [@pixldemon][pixldemon url]: [#6][PR 6] [#10][PR 10]
 
 A huge thanks for their contributions!!
 
@@ -208,7 +210,6 @@ Licensed under the [Apache License, Version 2.0][license link].
 [config doc]: https://doc.rust-lang.org/cargo/reference/config.html
 [raw link]: https://docs.rs/rust-spice/latest/spice/core/raw/index.html
 [neat link]: https://docs.rs/rust-spice/latest/spice/core/neat/index.html
-
 [s-rah url]: https://github.com/s-rah
 [pixldemon url]: https://github.com/pixldemon
 [PR 2]: https://github.com/GregoireHENRY/rust-spice/pull/2
