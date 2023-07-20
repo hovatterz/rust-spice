@@ -24,8 +24,12 @@ Translate the SPICE integer code of a body into a common name for that body.
 See [`raw::bodc2n`] for the raw interface.
 */
 #[cfg_attr(any(feature = "lock", doc), impl_for(SpiceLock))]
-pub fn bodc2n(code: i32) -> (String, bool) {
-    raw::bodc2n(code, MAX_LEN_OUT as i32)
+pub fn bodc2n(code: i32) -> Option<String> {
+    let (str, success) = raw::bodc2n(code, MAX_LEN_OUT as i32);
+    match success {
+        true => Some(str),
+        false => None,
+    }
 }
 
 /**
