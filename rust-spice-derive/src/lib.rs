@@ -385,9 +385,9 @@ pub fn cspice_proc(input: TokenStream) -> TokenStream {
                                 let ident = format!("varout_{}", vars_out_decl.len());
                                 vars_out_decl.push(declare(
                                     format!("mut {}", ident),
-                                    Some("Cell::new_int()".to_string()),
+                                    Some("Cell::new()".to_string()),
                                 ));
-                                cspice_inputs.push(new_pat(format!("&mut {}.0", ident)));
+                                cspice_inputs.push(new_pat(format!("&mut {}.inner", ident)));
                                 vars_out.push(new_pat(ident));
                             }
                             _ => panic!("->8"),

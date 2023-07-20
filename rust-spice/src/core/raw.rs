@@ -4,7 +4,10 @@ A Rust idiomatic CSPICE wrapper built with [procedural macros][`spice_derive`].
 
 use crate::{c, cstr, fcstr, get_scalar, get_varr, init_scalar, malloc, mallocstr, mptr};
 use spice_derive::{cspice_proc, return_output};
-use std::ops::{Deref, DerefMut};
+use std::{
+    marker::PhantomData,
+    ops::{Deref, DerefMut},
+};
 
 #[cfg(any(feature = "lock", doc))]
 use {crate::core::lock::SpiceLock, spice_derive::impl_for};
@@ -17,52 +20,62 @@ pub type DSKDSC = c::SpiceDSKDescr;
 pub type CELL = c::SpiceCell;
 pub const CELL_MAXID: usize = 10_000;
 
+pub trait SpiceCellType: Copy {}
+impl SpiceCellType for i32 {}
+impl SpiceCellType for f64 {}
+
 /**
 A cell is a data structure intended to provide safe array access within the applications.
 
 See the [C documentation](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/C/req/cells.html).
 */
 #[derive(Debug)]
-pub struct Cell(c::SpiceCell);
+pub struct Cell<T: SpiceCellType> {
+    inner: c::SpiceCell,
+    phantom: PhantomData<T>,
+}
 
-impl Cell {
+impl<T: SpiceCellType> Cell<T> {
     /**
-    Declare a cell from integer.
+    Declare a cell.
     */
-    pub fn new_int() -> Self {
-        let base = malloc!(i32, CELL_MAXID + c::SPICE_CELL_CTRLSZ as usize);
-        Self(CELL {
-            dtype: c::_SpiceDataType_SPICE_INT,
-            length: 0i32,
-            size: CELL_MAXID as i32,
-            card: 0i32,
-            isSet: 1i32,
-            adjust: 0i32,
-            init: 0i32,
-            base: base as *mut libc::c_void,
-            data: base.wrapping_add(c::SPICE_CELL_CTRLSZ as usize) as *mut libc::c_void,
-        })
+    pub fn new() -> Self {
+        let base = malloc!(T, CELL_MAXID + c::SPICE_CELL_CTRLSZ as usize);
+        Self {
+            inner: CELL {
+                dtype: c::_SpiceDataType_SPICE_INT,
+                length: 0i32,
+                size: CELL_MAXID as i32,
+                card: 0i32,
+                isSet: 1i32,
+                adjust: 0i32,
+                init: 0i32,
+                base: base as *mut libc::c_void,
+                data: base.wrapping_add(c::SPICE_CELL_CTRLSZ as usize) as *mut libc::c_void,
+            },
+            phantom: PhantomData,
+        }
     }
 
     /**
     Declare data from a cell at index.
     */
-    pub fn get_data_int(&self, index: usize) -> i32 {
-        unsafe { *(self.data as *mut i32).wrapping_add(index) }
+    pub fn get_data(&self, index: usize) -> T {
+        unsafe { *(self.inner.data as *mut T).wrapping_add(index) }
     }
 }
 
-impl Deref for Cell {
+impl<T: SpiceCellType> Deref for Cell<T> {
     type Target = c::SpiceCell;
 
     fn deref(&self) -> &Self::Target {
-        &self.0
+        &self.inner
     }
 }
 
-impl DerefMut for Cell {
+impl<T: SpiceCellType> DerefMut for Cell<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
+        &mut self.inner
     }
 }
 
@@ -71,7 +84,7 @@ cspice_proc! {
     Return a SPICE set containing the frame IDs of all built-in frames of a specified class.
     */
     #[cfg_attr(any(feature = "lock", doc), impl_for(SpiceLock))]
-    pub fn bltfrm(frame_type: i32) -> Cell {}
+    pub fn bltfrm(frame_type: i32) -> Cell<i32> {}
 }
 
 cspice_proc! {
@@ -146,7 +159,7 @@ cspice_proc! {
     specified DSK file.
     */
     #[cfg_attr(any(feature = "lock", doc), impl_for(SpiceLock))]
-    pub fn dskobj(dsk: &str) -> Cell {}
+    pub fn dskobj(dsk: &str) -> Cell<i32> {}
 }
 
 /**
